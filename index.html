@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>MAKAUT CGPA to Percentage Calculator & Marks Estimator</title>
+    <meta name="title" content="MAKAUT CGPA to Percentage Calculator & Marks Estimator">
+    <meta name="description" content="Free, offline calculator for MAKAUT students. Convert your CGPA to percentage, estimate your total semester marks, and calculate cumulative SGPA accurately.">
+    <meta name="keywords" content="MAKAUT, CGPA to percentage, MAKAUT marks calculator, SGPA calculator, West Bengal university calculator">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook / WhatsApp (Makes links look good when shared) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MAKAUT CGPA & Marks Calculator">
+    <meta property="og:description" content="Calculate your MAKAUT percentage and total obtained marks instantly. 100% free and private.">
+    
+  
+
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --primary-color: #0056b3;
+            --border-color: #cccccc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1, h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        small {
+            display: block;
+            color: #666;
+            margin-top: 4px;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .dynamic-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .dynamic-row input {
+            flex: 1;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            padding: 10px;
+            flex: 0 0 auto;
+        }
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        .result-divider {
+            margin: 10px 0;
+            border: 0;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>MAKAUT Utility Calculator</h1>
+    
+    <!-- 1. SEMESTER MARKS ESTIMATOR -->
+    <div class="container">
+        <h2>1. Semester Marks Estimator</h2>
+        <p>Calculate your estimated obtained marks for a single semester using MAKAUT's official SGPA formula.</p>
+        
+        <div class="input-group">
+            <label for="total-subjects">Total Subjects (Papers):</label>
+            <input type="number" id="total-subjects" min="1" placeholder="e.g., 8">
+            <small>Count all theory and practical subjects listed on the grade card.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="total-credits">Total Semester Credits:</label>
+            <input type="number" id="total-credits" step="0.5" min="1" placeholder="e.g., 21.5">
+            <small>Found at the bottom of your grade card.</small>
+        </div>
+
+        <div class="input-group">
+            <label for="earned-credit-points">Total Earned Credit Points:</label>
+            <input type="number" id="earned-credit-points" step="0.5" min="0" placeholder="e.g., 185">
+            <small>Total points accumulated across all subjects this semester.</small>
+        </div>
+        
+        <button onclick="calculateEstimatedMarks()" style="background-color: #28a745;">Calculate Total Marks</button>
+        
+        <div id="marks-result" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- 2. DIRECT CGPA CONVERTER -->
+    <div class="container">
+        <h2>2. Direct CGPA to Percentage</h2>
+        <p>Uses the official MAKAUT conversion formula: <strong>Percentage = (CGPA - 0.75) * 10</strong></p>
+        
+        <div class="input-group">
+            <label for="cgpa-input">Enter your overall CGPA:</label>
+            <input type="number" id="cgpa-input" step="0.01" min="0" max="10" placeholder="e.g., 8.25">
+        </div>
+        
+        <button onclick="calculatePercentage()">Convert to Percentage</button>
+        
+        <div id="cgpa-result" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- 3. SEMESTER-WISE CUMULATIVE CGPA CALCULATOR -->
+    <div class="container">
+        <h2>3. Cumulative CGPA Aggregator</h2>
+        <p>Calculate your overall CGPA by combining results from multiple semesters using a credit-weighted average.</p>
+        
+        <div id="semesters-container">
+            <div class="dynamic-row">
+                <input type="text" placeholder="Semester (Optional)">
+                <input type="number" class="sem-sgpa" placeholder="SGPA" step="0.01" min="0" max="10">
+                <input type="number" class="sem-credits" placeholder="Credits" step="0.5" min="1">
+            </div>
+        </div>
+        
+        <button onclick="addSemesterRow()">+ Add Semester</button>
+        <button onclick="calculateCumulativeCGPA()" style="background-color: #28a745;">Calculate Cumulative CGPA</button>
+        
+        <div id="cumulative-result" class="result-box" style="display: none;"></div>
+    </div>
+
+    <script>
+        // --- 1. Semester Marks Estimator Logic ---
+        function calculateEstimatedMarks() {
+            const subjects = parseInt(document.getElementById('total-subjects').value);
+            const totalCredits = parseFloat(document.getElementById('total-credits').value);
+            const earnedPoints = parseFloat(document.getElementById('earned-credit-points').value);
+            const resultBox = document.getElementById('marks-result');
+
+            if (isNaN(subjects) || isNaN(totalCredits) || isNaN(earnedPoints) || subjects <= 0 || totalCredits <= 0) {
+                alert("Please enter valid numbers for all fields.");
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            const sgpa = earnedPoints / totalCredits;
+            let percentage = (sgpa - 0.75) * 10;
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+
+            const totalMaxMarks = subjects * 100;
+            const totalObtainedMarks = (percentage / 100) * totalMaxMarks;
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `
+                <strong>Calculated SGPA:</strong> ${sgpa.toFixed(2)} <br>
+                <strong>Equivalent Percentage:</strong> ${percentage.toFixed(2)}%
+                <hr class="result-divider">
+                <strong>Total Maximum Marks:</strong> ${totalMaxMarks} <br>
+                <strong style="color: #0056b3; font-size: 1.2em;">Estimated Obtained Marks: ${Math.round(totalObtainedMarks)}</strong>
+            `;
+        }
+
+        // --- 2. Direct CGPA to Percentage Logic ---
+        function calculatePercentage() {
+            const cgpaInput = document.getElementById('cgpa-input').value;
+            const cgpa = parseFloat(cgpaInput);
+            const resultBox = document.getElementById('cgpa-result');
+
+            if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+                alert("Please enter a valid CGPA between 0 and 10.");
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            let percentage = (cgpa - 0.75) * 10;
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = `Equivalent Percentage: <strong>${percentage.toFixed(2)}%</strong>`;
+        }
+
+        // --- 3. Cumulative CGPA Logic ---
+        function addSemesterRow() {
+            const container = document.getElementById('semesters-container');
+            const row = document.createElement('div');
+            row.className = 'dynamic-row';
+            row.innerHTML = `
+                <input type="text" placeholder="Semester (Optional)">
+                <input type="number" class="sem-sgpa" placeholder="SGPA" step="0.01" min="0" max="10">
+                <input type="number" class="sem-credits" placeholder="Credits" step="0.5" min="1">
+                <button class="remove-btn" onclick="this.parentElement.remove()" title="Remove Semester">X</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function calculateCumulativeCGPA() {
+            const sgpaInputs = document.querySelectorAll('.sem-sgpa');
+            const creditInputs = document.querySelectorAll('.sem-credits');
+            
+            let totalCreditPoints = 0;
+            let totalCredits = 0;
+            let valid = true;
+
+            for (let i = 0; i < sgpaInputs.length; i++) {
+                const sgpaVal = parseFloat(sgpaInputs[i].value);
+                const creditVal = parseFloat(creditInputs[i].value);
+
+                if (!isNaN(sgpaVal) && !isNaN(creditVal)) {
+                    if (sgpaVal < 0 || sgpaVal > 10) {
+                        alert("Error: SGPA must be between 0 and 10.");
+                        valid = false;
+                        break;
+                    }
+                    // Formula: Sum of (SGPA * Credits)
+                    totalCreditPoints += (sgpaVal * creditVal);
+                    totalCredits += creditVal;
+                }
+            }
+
+            if (valid && totalCredits > 0) {
+                const cgpa = totalCreditPoints / totalCredits;
+                let percentage = (cgpa - 0.75) * 10;
+                
+                if (percentage < 0) percentage = 0;
+                if (percentage > 100) percentage = 100;
+
+                const resultBox = document.getElementById('cumulative-result');
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = `
+                    <strong>Total Combined Credits:</strong> ${totalCredits} <br>
+                    <strong>Overall Calculated CGPA:</strong> ${cgpa.toFixed(2)}
+                    <hr class="result-divider">
+                    <strong style="color: #0056b3; font-size: 1.2em;">Overall Equivalent Percentage: ${percentage.toFixed(2)}%</strong>
+                `;
+            } else if (valid && totalCredits === 0) {
+                 alert("Please enter data for at least one valid semester.");
+            }
+        }
+    </script>
+
+    <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; font-size: 0.9em; color: #666;">
+    <p><strong>Disclaimer:</strong> This is an unofficial tool. Always verify your final marks and CGPA with official MAKAUT grade cards.</p>
+    <p>🔒 <strong>Privacy First:</strong> This tool runs entirely in your browser. No personal data or scores are collected, stored, or transmitted.</p>
+    <p>&copy; 2026 Kaniska. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
